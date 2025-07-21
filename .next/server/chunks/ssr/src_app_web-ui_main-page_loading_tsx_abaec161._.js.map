@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 5, "column": 0}, "map": {"version":3,"sources":["file:///Users/vkyrychenko/Desktop/aiseo/src/app/web-ui/main-page/loading.tsx"],"sourcesContent":["import React from 'react';\n\nconst WebUILoading: React.FC = () => {\n  return (\n    <div className=\"min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center\">\n      <div className=\"text-center\">\n        <div className=\"animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4\"></div>\n        <h2 className=\"text-xl font-semibold text-slate-800 mb-2\">\n          Loading AISEO...\n        </h2>\n        <p className=\"text-slate-600\">\n          Preparing your AI-powered SEO platform\n        </p>\n      </div>\n    </div>\n  );\n};\n\nexport default WebUILoading; "],"names":[],"mappings":";;;;;AAEA,MAAM,eAAyB;IAC7B,qBACE,8OAAC;QAAI,WAAU;kBACb,cAAA,8OAAC;YAAI,WAAU;;8BACb,8OAAC;oBAAI,WAAU;;;;;;8BACf,8OAAC;oBAAG,WAAU;8BAA4C;;;;;;8BAG1D,8OAAC;oBAAE,WAAU;8BAAiB;;;;;;;;;;;;;;;;;AAMtC;uCAEe","debugId":null}}]
+}

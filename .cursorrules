@@ -1,0 +1,257 @@
+# AISEO Project - Cursor Rules
+
+## Project Overview
+AISEO is a full-stack AI-powered SEO generation platform with a Next.js frontend and Node.js backend, built with TypeScript, Tailwind CSS, shadcn/ui, Supabase database, and Sandpack for live code editing capabilities. The platform uses AI agents to generate SEO-optimized content for casino brands, with comprehensive project management, versioning, and orchestration systems. The platform features a comprehensive page library system with 20+ predefined page types and an interactive structure builder for creating customized casino websites.
+
+## Tech Stack
+- **Frontend Framework**: Next.js 14+ with App Router
+- **Backend**: Node.js with Express.js
+- **Database**: Supabase (PostgreSQL)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Code Editor**: Sandpack (@codesandbox/sandpack-react)
+- **AI Integration**: Claude API with multi-agent system
+- **Package Manager**: npm
+
+## Code Style & Conventions
+
+### TypeScript
+- Use strict TypeScript configuration
+- Prefer interfaces over types for object shapes
+- Use proper type annotations for all functions and variables
+- Avoid `any` type - use proper typing or `unknown`
+
+### React/Next.js
+- Use functional components with hooks
+- Prefer `const` over `let` for component declarations
+- Use proper prop typing with interfaces
+- Follow Next.js 14+ App Router conventions
+- Use server components by default, client components when needed
+
+### Styling
+- Use Tailwind CSS utility classes
+- Follow mobile-first responsive design
+- Use shadcn/ui components when available
+- Custom CSS only when Tailwind utilities are insufficient
+- Use CSS variables for theming (already configured)
+
+### File Structure
+- Follow Next.js App Router structure for frontend
+- Place components in `src/components/`
+- Place utilities in `src/lib/`
+- Place types in `src/types/`
+- Backend API routes in `src/app/api/`
+- Database utilities in `src/lib/db/`
+- Supabase client configuration in `src/lib/supabase/`
+- Page library system in `src/lib/page-library.ts`
+- Use kebab-case for file names
+- Use PascalCase for component names
+
+### Naming Conventions
+- Components: PascalCase (e.g., `CodeEditor.tsx`)
+- Files: kebab-case (e.g., `code-editor.tsx`)
+- Functions: camelCase (e.g., `handleCodeChange`)
+- Constants: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS`)
+- CSS classes: Use Tailwind's utility classes
+
+## Best Practices
+
+### Performance
+- Use Next.js Image component for images
+- Implement proper loading states
+- Use React.memo for expensive components
+- Optimize bundle size with dynamic imports when needed
+
+### Accessibility
+- Use semantic HTML elements
+- Include proper ARIA labels
+- Ensure keyboard navigation works
+- Maintain proper color contrast ratios
+
+### Error Handling
+- Use try-catch blocks for async operations
+- Implement proper error boundaries
+- Show user-friendly error messages
+- Log errors appropriately
+
+### State Management
+- Use React hooks (useState, useEffect, useContext)
+- Consider Zustand or similar for complex state
+- Avoid prop drilling - use context when needed
+- Use Supabase real-time subscriptions for live data updates
+- Implement proper loading and error states for API calls
+
+## Backend & Database Guidelines
+
+### Node.js/Express.js
+- Use Next.js API routes for backend functionality
+- Implement proper middleware for authentication and validation
+- Use TypeScript for all backend code
+- Follow RESTful API conventions
+- Implement proper error handling and status codes
+
+### Supabase Integration
+- Use Supabase client for database operations
+- Implement Row Level Security (RLS) policies
+- Use Supabase Auth for user authentication
+- Leverage Supabase real-time features when needed
+- Store sensitive configuration in environment variables
+- Use proper TypeScript types for database schemas
+
+### Claude API Integration
+- Use the generic agent executor `src/lib/agent-executor.ts` for all agents
+- Never call Claude API directly - use the executor system
+- Each agent has optimized model configuration (Sonnet 3.5, Sonnet 3, Haiku 3.5, Opus 3)
+- API endpoints: `GET /api/claude` (test), `POST /api/claude/agent` (generic executor)
+- Environment variable: `CLAUDE_API_KEY=sk-ant-api03-...`
+- All system prompts managed in `src/services/system-prompts.ts`
+- Use proper error handling and execution tracking
+- Form integration automatically triggers agents after structure selection
+- Claude responses are parsed and stored as project files in database
+
+### Database Schema
+The project uses 10 main database tables:
+1. **projects** - Main project metadata, user input (JSONB), status tracking, state management, auto-generated project names (brandname-countrycode-languagecode-date), site type, and structure information
+   - User input structure: brand_name, target_country, target_language → site_type, site_type_selected_at → structure (organized order)
+2. **project_files** - File records with path, type, content, version, blocks, author
+3. **agent_tasks** - Agent execution logs with input/output, status, logs, error tracking
+4. **project_versions** - Versioning and change tracking with snapshots and change reasons
+5. **error_log** - Debugging and orchestration error tracking by agent and step
+6. **library** - Pre-made blocks and reusable content sections with code and meta
+7. **edits** - User and agent edit logs with diff tracking and agent attribution
+8. **assets** - Storage references for images, logos, graphics with URL and usage tracking
+9. **seo_reports** - SEO evaluation results linked to agent tasks
+10. **orchestrator_logs** - Workflow execution logs with step tracking and output data
+
+### Page Library System
+The platform includes a comprehensive library of 20+ predefined page types for casino websites:
+- **Core Pages**: Home, Reviews, Guide, Bonuses, Blog, FAQ, About, Contact, Legal
+- **Specialized Pages**: Slots/Games Hub, Providers, Payment Methods, Tournaments & Events, Mobile Apps, VIP/Loyalty Program, News, Glossary
+- Each page includes predefined sections with SEO notes and content guidelines
+- Structure data is stored in `projects.meta.structure` for AI agent processing
+
+### AI Agent System
+The platform uses 13 specialized AI agents for different tasks:
+
+**Core Project Agents:**
+- **new-project** - Initial project setup and configuration
+- **ui** - UI design and user interface creation
+- **html-structure** - HTML structure and page layouts  
+- **composer** - Composes and assembles content and components
+
+**Validation & Testing Agents:**
+- **tester-validator-reviewer** - Tests, validates, and reviews generated content and code
+
+**Content & SEO Agents:**
+- **seo** - SEO optimization and analysis
+- **content** - Generates and manages content
+- **researcher** - Conducts web research and gathers casino information (background execution)
+
+**Specialized Agents:**
+- **unicalizator** - Ensures content uniqueness and originality
+- **decomposer** - Breaks down complex tasks into smaller components
+
+**Orchestration & Management:**
+- **orchestrator** - Supervises and controls the entire workflow
+  - Service: `src/services/orchestrator_agent.ts` - Complete workflow management
+  - Workflow Control: Manages project workflow from start to finish
+  - Agent Supervision: Triggers agents in correct order with dependency handling
+  - Error Handling: Retry logic and error recovery mechanisms
+- **summarizer** - Analyzes and summarizes project status for context
+- **file-report** - Generates file structure reports for agents
+
+- Agent tasks are logged and tracked in the `agent_tasks` table
+- Each agent has specific input/output patterns and error handling
+- System prompts are managed in `src/services/system-prompts.ts`
+- **Researcher Agent**: Runs background web research using ChatGPT after Step 1 completion
+  - Service: `src/services/researcher_agent.ts` - Complete background research implementation
+  - API Endpoints: `POST /api/researcher/start` and `GET /api/researcher/start?projectId=xxx`
+  - Research Sources: casino.guru, askgamblers.com, casino.org, onlinecasinogroups.com
+  - ChatGPT Integration: Uses OpenAI GPT-4 (4.1 equivalent) for web research capabilities with timeout protection
+- **Background Execution**: Non-blocking casino data collection while user works on Step 2
+- **Comprehensive Logging**: All research phases tracked in agent_tasks table with detailed metadata
+  - Start Task: Logs when research begins with full input parameters
+  - In-Progress Task: Logs during execution with progress updates
+  - Success Task: Logs completed research with full results
+  - Error Task: Logs failures with detailed error information and stack traces
+
+## Sandpack Integration
+- Use Sandpack for live code editing features
+- Configure appropriate templates for different languages
+- Handle code changes and preview updates
+- Implement proper error handling for code execution
+
+## Implementation Status
+
+### **Completed Features:**
+- **Multi-Agent System**: 13 specialized agents with optimized model configurations
+- **Generic Agent Executor**: `src/lib/agent-executor.ts` handles all agent executions
+- **Database Schema**: Complete 10-table database structure with comprehensive relationships
+- **Form Integration**: Multi-step form with automatic Claude integration after structure selection
+- **Orchestrator Agent**: Complete workflow management system with supervision and error handling
+- **Researcher Agent**: Full background web research implementation with ChatGPT integration
+- **Agent Tasks Logging**: Comprehensive database logging for all agent phases
+- **Page Library System**: 20+ predefined casino page types with SEO-optimized sections
+- **Interactive Structure Builder**: Visual page and section selection with real-time feedback
+- **Background Task Management**: Non-blocking research execution with progress tracking
+- **Error Handling**: Comprehensive error tracking and recovery mechanisms
+
+### **Service Files:**
+- `src/services/researcher_agent.ts` - Complete background research implementation
+- `src/services/orchestrator_agent.ts` - Complete workflow management system
+- `src/services/system-prompts.ts` - All agent system prompts and utilities
+- `src/services/new_project_agent.ts` - Initial project setup agent
+- `src/lib/agent-executor.ts` - Generic agent execution system
+- `src/lib/claude-api.ts` - Claude API client with model configurations
+
+### **API Endpoints:**
+- `GET /api/claude` - Claude API test endpoint
+- `POST /api/claude/agent` - Generic agent executor for all 13 agents
+- `POST /api/researcher/start` - Start background research
+- `GET /api/researcher/start?projectId=xxx` - Check research status
+
+## Development Workflow
+- Write clean, readable code
+- Add comments for complex logic
+- Use meaningful variable and function names
+- Keep components small and focused
+- Test components thoroughly
+
+## Dependencies
+- Prefer stable, well-maintained packages
+- Keep dependencies up to date
+- Use exact versions in package.json for critical dependencies
+- Document any custom configurations
+
+## Git
+- Use conventional commit messages
+- Keep commits focused and atomic
+- Use feature branches for new development
+- Write meaningful commit messages
+
+## AI Assistance Guidelines
+- When suggesting code, prefer modern React patterns
+- Always include proper TypeScript types
+- Suggest shadcn/ui components when appropriate
+- Consider performance implications
+- Provide explanations for complex solutions
+- Suggest improvements for accessibility and UX
+- Include Supabase client setup and configuration when needed
+- Suggest proper API route structure for backend functionality
+- Consider database schema design and RLS policies
+- Include environment variable setup for Supabase configuration
+- **OpenAI Integration**: Include OPENAI_API_KEY for researcher agent web research capabilities
+- **Researcher Agent Service**: Complete background web research implementation with ChatGPT integration
+- **Agent Tasks Logging**: Comprehensive database logging for all research phases (start, progress, success, error)
+- Use the page library system from `src/lib/page-library.ts` for casino-specific page templates
+- Consider the multi-step form workflow (brand info → site type → structure selection → AI processing)
+- Implement interactive UI patterns for page and section selection
+- Include SEO guidance and best practices in user interfaces
+- Use the generic agent executor system for all Claude API integrations
+- Follow agent-specific model configurations and optimize for performance/cost
+- Implement proper error handling and logging for agent tasks
+- Form integration should call agents automatically after user completes structure selection
+- Parse Claude responses as JSON and create project files in database
+- Display AI-generated results in dedicated response step with proper formatting
+- Handle AI execution errors gracefully with fallback messaging 

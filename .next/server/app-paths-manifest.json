@@ -1,0 +1,7 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/claude/agent/route": "app/api/claude/agent/route.js",
+  "/api/researcher/start/route": "app/api/researcher/start/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/web-ui/main-page/page": "app/web-ui/main-page/page.js"
+}
